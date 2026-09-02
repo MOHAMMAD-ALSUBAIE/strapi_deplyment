@@ -2,7 +2,7 @@ services:
   strapi:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     env_file: .env
     environment:
@@ -16,8 +16,11 @@ services:
       DATABASE_PASSWORD: f
       DATABASE_SSL: "false"
     volumes:
+      # Mount source code for live development.
+      - .:/opt/app
+      - /opt/app/node_modules
       # Uploads must outlive the container.
-      - strapi-uploads:/app/public/uploads
+      - strapi-uploads:/opt/app/public/uploads
     ports:
       # Bound to localhost only — nginx on the host proxies to this.
       # Change to "1337:1337" if you want to reach it directly.
