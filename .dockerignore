@@ -1,0 +1,39 @@
+# Dependencies — reinstalled inside the image
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build output — regenerated inside the image
+dist
+build
+.cache
+.strapi
+.strapi-updater.json
+
+# Secrets — never bake these into an image
+.env
+.env.*
+!.env.example
+
+# Local database and uploads — should be volumes, not image layers
+.tmp
+public/uploads/*
+!public/uploads/.gitkeep
+
+# VCS and editor noise
+.git
+.gitignore
+.github
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# Docker files themselves
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Docs
+README.md
+*.md
