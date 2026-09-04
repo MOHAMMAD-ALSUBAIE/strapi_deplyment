@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "registrtionforms",
+  "info": {
+    "singularName": "registrtionform",
+    "pluralName": "registrtionforms",
+    "displayName": "registrtionform"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "uhhh": {
+      "type": "string"
+    },
+    "uhhhnjnj": {
+      "type": "string"
+    },
+    "jijiojol": {
+      "type": "string"
+    }
+  }
+}

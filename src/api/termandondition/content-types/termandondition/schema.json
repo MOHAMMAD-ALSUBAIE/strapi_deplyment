@@ -1,10 +1,10 @@
 {
-  "kind": "singleType",
-  "collectionName": "term_and_conditions",
+  "kind": "collectionType",
+  "collectionName": "termandconditions",
   "info": {
-    "singularName": "term-and-condition",
-    "pluralName": "term-and-conditions",
-    "displayName": "term_And_Condition"
+    "singularName": "termandondition",
+    "pluralName": "termandconditions",
+    "displayName": "TermandCondition"
   },
   "options": {
     "draftAndPublish": true
@@ -19,20 +19,23 @@
       "type": "string",
       "pluginOptions": {
         "i18n": {
-          "localized": true
+          "localized": false
         }
-      }
+      },
+      "required": true,
+      "unique": true
     },
     "active": {
       "type": "boolean",
       "pluginOptions": {
         "i18n": {
-          "localized": true
+          "localized": false
         }
-      }
+      },
+      "default": false
     },
     "header": {
-      "type": "boolean",
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
