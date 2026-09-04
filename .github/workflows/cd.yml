@@ -2,7 +2,7 @@ name: CD
 
 on:
   workflow_run:
-    workflows: ["CI Build"]  # Must match the exact name of the upstream workflow
+    workflows: ["CI Build"]  
     types:
       - completed
 
@@ -15,4 +15,4 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:latest
           docker stop projects-strapi-1 || true
           docker rm projects-strapi-1 || true
-          docker run -d --name projects-strapi-1 -p 1337:1337 ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:latest
+          docker run -d --name projects-strapi-1 --env-file /srv/strapi/.env -p 1337:1337 ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:latest
