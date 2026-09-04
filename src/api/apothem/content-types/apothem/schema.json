@@ -1,0 +1,26 @@
+{
+  "kind": "singleType",
+  "collectionName": "apothems",
+  "info": {
+    "singularName": "apothem",
+    "pluralName": "apothems",
+    "displayName": "apothem"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "them": {
+      "type": "string"
+    },
+    "thems": {
+      "type": "enumeration",
+      "enum": [
+        "a",
+        "d",
+        "c"
+      ]
+    }
+  }
+}
