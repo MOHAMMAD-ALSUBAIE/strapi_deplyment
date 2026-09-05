@@ -29,7 +29,10 @@ jobs:
     steps:
       - name: ssh into server and deploy
         run: |
-          ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}
+          mkdir -p ~./ssh 
+          cp ${{ secrets.SSH_KEY }} ~./ssh/public_ssh_key
+          chmod 600 ~./ssh/public_ssh_key
+          ssh -i ~./ssh/public_ssh_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}
           docker pull ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:latest
           docker stop projects-strapi-1 || true
           docker rm projects-strapi-1 || true
