@@ -1,9 +1,10 @@
 name: CI Build
 
-on: [
-  push,pull_request
-]
-
+on: 
+  push:
+    branches: [main,uat,dev]
+  pull_request:
+    branches: [main,uat,dev]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,18 +23,25 @@ jobs:
           context: .
           file: Dockerfile.prod
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:latest
-  deploy:
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.sha}}
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.ref_name }}
+  development:
     needs: build
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on:  self-hosted
     steps:
-      - uses: actions/checkout@v3
-      - name: ssh into server and deploy
+      - name:  deploy
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          mkdir -p ~/.ssh 
-          touch ~/.ssh/deploy_key
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash -s" < .github/workflows/deploy.sh
-          
+          docker pull "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+          docker stop projects-strapi-1 || true
+          docker rm projects-strapi-1 || true
+          docker run -d --name projects-strapi-1 \
+           --network projects_default \
+              --env-file /srv/strapi/.env \
+              -p 1337:1337 \
+           "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+          docker image prune -f

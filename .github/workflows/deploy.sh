@@ -7,5 +7,5 @@ docker run -d --name projects-strapi-1 \
   --network projects_default \
   --env-file /srv/strapi/.env \
   -p 1337:1337 \
-  "$DOCKER_USERNAME/strapi-deployment:latest"
+  "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
 docker image prune -f
