@@ -42,7 +42,7 @@ jobs:
               --env-file /srv/strapi/.env \
               -p 1337:1337 \
            "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
-          docker image prune -f
+          docker image prune -af
   prod:
     needs: build
     if: github.event_name == 'push' && github.ref_name == 'main'
@@ -61,4 +61,4 @@ jobs:
               --env-file /srv/strapi/.env \
               -p 1337:1337 \
            "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
-          docker image prune -f
+          docker image prune -af
