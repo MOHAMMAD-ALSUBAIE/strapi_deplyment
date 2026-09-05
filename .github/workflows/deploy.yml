@@ -25,10 +25,10 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.sha}}
-            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.ref_name }}
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.head_ref || github.ref_name }}
   development:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    if: github.event_name == 'push' && github.ref_name == 'dev'
     runs-on:  self-hosted
     steps:
       - name:  deploy
