@@ -3,8 +3,6 @@ name: CI Build
 on: 
   push:
     branches: [main,uat,dev]
-  pull_request:
-    branches: [main,uat,dev]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,7 +23,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.sha}}
-            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.head_ref || github.ref_name }}
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.ref_name }}
   development:
     needs: build
     if: github.event_name == 'push' && github.ref_name == 'dev'
