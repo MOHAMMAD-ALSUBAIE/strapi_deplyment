@@ -33,6 +33,6 @@ jobs:
           touch ~/.ssh/deploy_key
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} \ 
-            "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash -s" < ./deploy.sh
+          ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash -s" < ./deploy.sh
           
