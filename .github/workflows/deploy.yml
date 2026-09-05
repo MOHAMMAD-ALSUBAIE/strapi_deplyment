@@ -27,7 +27,7 @@ jobs:
   development:
     needs: build
     if: github.event_name == 'push' && github.ref_name == 'dev'
-    runs-on:  self-hosted
+    runs-on:  [self-hosted,dev]
     steps:
       - name:  deploy
         env:
