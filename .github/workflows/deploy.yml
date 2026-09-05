@@ -3,8 +3,6 @@ name: CI Build
 on: 
   push:
     branches: [main,uat,dev]
-  pull_request:
-    branches: [main,uat,dev]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,17 +22,36 @@ jobs:
           file: Dockerfile.prod
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.sha}}
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.sha}}-${{ github.ref_name }}
             ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.ref_name }}
   development:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    if: github.event_name == 'push' && github.ref_name == 'dev'
     runs-on:  self-hosted
     steps:
       - name:  deploy
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
+        run: |
+          docker pull "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+          docker stop projects-strapi-1 || true
+          docker rm projects-strapi-1 || true
+          docker run -d --name projects-strapi-1 \
+           --network projects_default \
+              --env-file /srv/strapi/.env \
+              -p 1337:1337 \
+           "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+          docker image prune -f
+  prod:
+    needs: build
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    runs-on:  [self-hosted,prod]
+    steps:
+      - name:  deploy
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
         run: |
           docker pull "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
           docker stop projects-strapi-1 || true
