@@ -32,24 +32,25 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
     },
   },
-  upload: {
+    upload: {
     config: {
-      security: {
-        allowedTypes: allowedMediaTypes,
-        deniedTypes,
-      },
-      provider: '@avorati/strapi-provider-upload-minio',
+      provider: 'aws-s3',
       providerOptions: {
-        host: env('MINIO_HOST'),
-        port: env('MINIO_PORT') ? parseInt(env('MINIO_PORT') as string) : 9000,
-        useSSL: env('MINIO_USE_SSL', 'false') === 'true',
-        accessKey: env('MINIO_ACCESS_KEY'),
-        secretKey: env('MINIO_SECRET_KEY'),
-        bucket: env('MINIO_BUCKET', 'strapi'),
-        folder: env('MINIO_FOLDER', 'uploads'),
-
+        s3Options: {
+          credentials: {
+            accessKeyId: env('MINIO_ACCESS_KEY'),
+            secretAccessKey: env('MINIO_SECRET_KEY'),
+          },
+          endpoint: env('MINIO_HOST'), // e.g., http://127.0.0.1:9000
+          region: env('MINIO_REGION', 'eu-central-1'), // MinIO requires a placeholder region
+          forcePathStyle: true, // Crucial for MinIO path routing
+        },
+        params: {
+          Bucket: env('MINIO_BUCKET'),
+        },
+      },
     },
-  }},
+  },
 });
 
 export default config;
