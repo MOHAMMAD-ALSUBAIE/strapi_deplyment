@@ -47,7 +47,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
         },
         params: {
           Bucket: env('MINIO_BUCKET'),
-          ACL: 'public-read',
+          ACL: 'public-read-write',
         },
       },
       actionOptions: {
