@@ -38,8 +38,18 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
         allowedTypes: allowedMediaTypes,
         deniedTypes,
       },
+      provider: '@avorati/strapi-provider-upload-minio',
+      providerOptions: {
+        host: env('MINIO_HOST'),
+        port: env('MINIO_PORT') ? parseInt(env('MINIO_PORT') as string) : 9000,
+        useSSL: env('MINIO_USE_SSL', 'false') === 'true',
+        accessKey: env('MINIO_ACCESS_KEY'),
+        secretKey: env('MINIO_SECRET_KEY'),
+        bucket: env('MINIO_BUCKET', 'strapi'),
+        folder: env('MINIO_FOLDER', 'uploads'),
+
     },
-  },
+  }},
 });
 
 export default config;
