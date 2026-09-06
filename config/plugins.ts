@@ -32,7 +32,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
     },
   },
-    upload: {
+  upload: {
     config: {
       provider: 'aws-s3',
       providerOptions: {
@@ -41,13 +41,23 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
             accessKeyId: env('MINIO_ACCESS_KEY'),
             secretAccessKey: env('MINIO_SECRET_KEY'),
           },
-          endpoint: env('MINIO_HOST'), // e.g., http://127.0.0.1:9000
-          region: env('MINIO_REGION', 'eu-central-1'), // MinIO requires a placeholder region
-          forcePathStyle: true, // Crucial for MinIO path routing
+          endpoint: env('MINIO_HOST'),
+          region: env('MINIO_REGION', 'eu-central-1'),
+          forcePathStyle: true,
         },
         params: {
           Bucket: env('MINIO_BUCKET'),
+          ACL: 'public-read',
         },
+      },
+      actionOptions: {
+        upload: {},
+        uploadStream: {},
+        delete: {},
+      },
+      security: {
+        allowedTypes: allowedMediaTypes,
+        deniedTypes,
       },
     },
   },
