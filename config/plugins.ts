@@ -34,6 +34,27 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
   },
   upload: {
     config: {
+      provider: 'aws-s3',
+      providerOptions: {
+        s3Options: {
+          credentials: {
+            accessKeyId: env('MINIO_ACCESS_KEY'),
+            secretAccessKey: env('MINIO_SECRET_KEY'),
+          },
+          endpoint: env('MINIO_HOST'),
+          region: env('MINIO_REGION', 'eu-central-1'),
+          forcePathStyle: true,
+        },
+        params: {
+          Bucket: env('MINIO_BUCKET'),
+          ACL: 'public-read-write',
+        },
+      },
+      actionOptions: {
+        upload: {},
+        uploadStream: {},
+        delete: {},
+      },
       security: {
         allowedTypes: allowedMediaTypes,
         deniedTypes,
