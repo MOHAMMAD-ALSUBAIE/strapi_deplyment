@@ -22,47 +22,50 @@ jobs:
           file: Dockerfile.prod
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.sha}}-${{ github.ref_name }}
-            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment:${{ github.ref_name }}
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment-${{ github.ref_name }}:${{ github.sha}}
+            ${{ secrets.DOCKER_USERNAME }}/strapi-deployment-${{ github.ref_name }}:${{ github.sha}}
   development:
     needs: build
     if: github.event_name == 'push' && github.ref_name == 'dev'
     runs-on:  [self-hosted,dev]
+    environment: dev
     steps:
       - name:  deploy
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
           ENV_FILE: ${{ secrets.ENV_FILE }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           mkdir -p /srv/strapi
           touch /srv/strapi/.env && chmod 600 /srv/strapi/.env && cat /srv/strapi/.env > /srv/strapi/.env.bak
           printf '%s\n' "$ENV_FILE" > /srv/strapi/.env
-          docker pull "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+          docker pull "$DOCKER_USERNAME/strapi-deployment-$REF_NAME:$IMAGE_TAG"
           docker stop projects-strapi-1 || true
           docker rm projects-strapi-1 || true
           docker run -d --name projects-strapi-1 \
            --network projects_default \
               --env-file /srv/strapi/.env \
               -p 1337:1337 \
-           "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+           "$DOCKER_USERNAME/strapi-deployment-$REF_NAME:$IMAGE_TAG"
           docker image prune -af
   prod:
     needs: build
     if: github.event_name == 'push' && github.ref_name == 'main'
     runs-on:  [self-hosted,prod]
+    environment: prod
     steps:
       - name:  deploy
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
         run: |
-          docker pull "$DOCKER_USERNAME/strapi-deployment_:$IMAGE_TAG"
+          docker pull "$DOCKER_USERNAME/strapi-deployment-$REF_NAME:$IMAGE_TAG"
           docker stop projects-strapi-1 || true
           docker rm projects-strapi-1 || true
           docker run -d --name projects-strapi-1 \
            --network projects_default \
               --env-file /srv/strapi/.env \
               -p 1337:1337 \
-           "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+           "$DOCKER_USERNAME/strapi-deployment-$REF_NAME:$IMAGE_TAG"
           docker image prune -af
