@@ -59,6 +59,8 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           IMAGE_TAG: ${{ github.sha}}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           mkdir -p /srv/strapi
           touch /srv/strapi/.env && chmod 600 /srv/strapi/.env && cat /srv/strapi/.env > /srv/strapi/.env.bak
