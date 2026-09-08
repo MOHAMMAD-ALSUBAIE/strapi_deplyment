@@ -33,7 +33,7 @@ jobs:
       - name:  deploy
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
+          IMAGE_TAG: ${{ github.sha}}
           ENV_FILE: ${{ secrets.ENV_FILE }}
           REF_NAME: ${{ github.ref_name }}
         run: |
@@ -58,7 +58,7 @@ jobs:
       - name:  deploy
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
+          IMAGE_TAG: ${{ github.sha}}
         run: |
           docker pull "$DOCKER_USERNAME/strapi-deployment-$REF_NAME:$IMAGE_TAG"
           docker stop projects-strapi-1 || true
