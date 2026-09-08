@@ -35,6 +35,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
           ENV_FILE: ${{ secrets.ENV_FILE }}
         run: |
+          touch /srv/strapi/.env && cat /srv/strapi/.env > /srv/strapi/.env.bak
           echo "$ENV_FILE" > /srv/strapi/.env
           docker pull "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
           docker stop projects-strapi-1 || true
@@ -55,7 +56,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           IMAGE_TAG: ${{ github.sha}}-${{ github.ref_name }}
         run: |
-          docker pull "$DOCKER_USERNAME/strapi-deployment:$IMAGE_TAG"
+          docker pull "$DOCKER_USERNAME/strapi-deployment_:$IMAGE_TAG"
           docker stop projects-strapi-1 || true
           docker rm projects-strapi-1 || true
           docker run -d --name projects-strapi-1 \
