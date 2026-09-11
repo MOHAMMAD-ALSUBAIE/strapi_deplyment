@@ -3,7 +3,7 @@ WORKDIR /opt/app
 COPY . .
 RUN npm ci
 RUN npm run build
-
+RUN npm prune --omit=dev
 
 
 FROM node:22-alpine 
@@ -11,10 +11,9 @@ WORKDIR /opt/app
 COPY --from=builder /opt/app/dist ./dist
 COPY --from=builder /opt/app/node_modules ./node_modules
 COPY --from=builder /opt/app/public ./public
-COPY --from=builder /opt/app/public ./package.json
 
 
 EXPOSE 1337
-CMD ["npm","run","start"]
+CMD ["node","dist/server.js"]
 
 
