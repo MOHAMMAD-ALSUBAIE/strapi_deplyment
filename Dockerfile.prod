@@ -11,9 +11,9 @@ WORKDIR /opt/app
 COPY --from=builder /opt/app/dist ./dist
 COPY --from=builder /opt/app/node_modules ./node_modules
 COPY --from=builder /opt/app/public ./public
+COPY --from=builder /opt/app/package.json .
 
 
 EXPOSE 1337
-CMD ["node","dist/server.js"]
-
+CMD ["npm", "run", "start"]
 
