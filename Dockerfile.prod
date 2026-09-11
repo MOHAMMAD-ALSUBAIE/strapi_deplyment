@@ -3,7 +3,7 @@ WORKDIR /opt/app
 COPY . .
 RUN npm ci
 RUN npm run build
-
+RUN npm prune --omit=dev
 
 
 FROM node:22-alpine 
